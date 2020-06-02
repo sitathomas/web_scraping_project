@@ -9,6 +9,11 @@ import scrapy
 
 
 class YnabItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+    title = scrapy.Field()
+    user = scrapy.Field()
+    posted = scrapy.Field()
+    category = scrapy.Field()
+    replies = scrapy.Field()
+    views = scrapy.Field()
+    last_active = scrapy.Field()
+    text = scrapy.Field()
