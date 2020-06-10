@@ -9,11 +9,12 @@ import scrapy
 
 
 class YnabItem(scrapy.Item):
+    category = scrapy.Field()
     title = scrapy.Field()
     user = scrapy.Field()
     posted = scrapy.Field()
-    category = scrapy.Field()
-    replies = scrapy.Field()
-    views = scrapy.Field()
-    last_active = scrapy.Field()
     text = scrapy.Field()
+    replies = scrapy.Field()
+    likes = scrapy.Field()
+    views = scrapy.Field()
+    following = scrapy.Field()
