@@ -1,5 +1,9 @@
 from scrapy import Spider, Request
 from ynab.items import YnabItem
+from selenium import webdriver
+from selenium.webdriver import ActionChains
+import time
+import datetime
 
 class YnabSpider(Spider):
   name = 'ynab_spider'
@@ -11,7 +15,7 @@ class YnabSpider(Spider):
 
     page_urls = ['https://support.youneedabudget.com/topics?pg={}&sort=no_sort'.format(x) for x in range(1,page_count)]
 
-    for url in page_urls[:1]:
+    for url in page_urls:
       yield Request(url=url, callback=self.parse_posts_list)
 
   def parse_posts_list(self, response):
@@ -20,13 +24,26 @@ class YnabSpider(Spider):
         yield Request(url=url, callback=self.parse_post_page)
 
   def parse_post_page(self, response):
+    
+    def parse_post_info():
+      options = webdriver.ChromeOptions()
+      options.add_argument("headless")
+      driver = webdriver.Chrome(executable_path = r'C:\Program Files\chromedriver.exe', options=options)
+      driver.get(response.url)
+      action = ActionChains(driver)
+      posted_path = driver.find_element_by_xpath('//span[@class=" said_on infotip screenonly"]')
+      action.move_to_element(posted_path).perform()
+      time.sleep(1)
+      posted_details = driver.find_element_by_xpath('//span[@class="infodate__created"]').text
+      return datetime.datetime.strptime(posted_details, '%b %d, %Y · %H:%M %p')
+
+    posted = parse_post_info()
+    
     category = response.xpath('//a[@class="site-breadcrumb__link -category"][2]/text()').extract_first()
 
     title = response.xpath('//h1[@class="topic__title"]/text()').extract_first()
     
     user = response.xpath('//li[@class="topic-meta__item topic-meta__handle at-handle"]/text()').extract_first()
-    
-    posted = "" # NEED FROM SELENIUM SCRIPT
     
     text = response.xpath('//div[@class="cfa topic__text formatted"]//text()').extract()
     text = ''.join(text).strip()
