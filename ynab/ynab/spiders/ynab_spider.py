@@ -4,6 +4,7 @@ from selenium import webdriver
 from selenium.webdriver import ActionChains
 import time
 import datetime
+import re
 
 class YnabSpider(Spider):
   name = 'ynab_spider'
@@ -47,20 +48,19 @@ class YnabSpider(Spider):
     
     text = response.xpath('//div[@class="cfa topic__text formatted"]//text()').extract()
     text = ''.join(text).strip()
-    text = text.replace(u'\xa0', '').replace("\"", "").replace(u"\n", " ")
+    text = re.sub('\s+', ' ', text)
     
     likes = response.xpath('//div[@class="panel panel-stats"]/ul/li[@class="-divider"]/span[contains(text(),"Likes")]/preceding-sibling::span/text()').extract_first()
+    if likes == None:
+      likes = 0
 
     replies = response.xpath('//span[@class="panel__value replyCount"]/text()').extract_first()
+    if replies == None:
+      replies = 0
 
     views = response.xpath('//div[@class="panel panel-stats"]/ul/li[@class="-divider"]/span[contains(text(),"Views")]/preceding-sibling::span/text()').extract_first()
     
     following = response.xpath('//div[@class="panel panel-stats"]/ul/li[@id="followingItem"]/span[1]/text()').extract_first()
-
-    if likes == None:
-      likes = 0
-    if replies == None:
-      replies = 0
 
     item = YnabItem()
     item["category"] = category
