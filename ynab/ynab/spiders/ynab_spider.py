@@ -47,8 +47,10 @@ class YnabSpider(Spider):
     user = response.xpath('//li[@class="topic-meta__item topic-meta__handle at-handle"]/text()').extract_first()
     
     text = response.xpath('//div[@class="cfa topic__text formatted"]//text()').extract()
-    text = ''.join(text).strip()
+    text = ''.join(text)
     text = re.sub('\s+', ' ', text)
+    text = text.replace("\"", "")
+    text = text.strip()
     
     likes = response.xpath('//div[@class="panel panel-stats"]/ul/li[@class="-divider"]/span[contains(text(),"Likes")]/preceding-sibling::span/text()').extract_first()
     if likes == None:
@@ -60,7 +62,9 @@ class YnabSpider(Spider):
 
     views = response.xpath('//div[@class="panel panel-stats"]/ul/li[@class="-divider"]/span[contains(text(),"Views")]/preceding-sibling::span/text()').extract_first()
     
-    following = response.xpath('//div[@class="panel panel-stats"]/ul/li[@id="followingItem"]/span[1]/text()').extract_first()
+    following = response.xpath('//div[@class="panel panel-stats"]/ul/li[@id="followingItem"]/span[1]/text()').extract_first()\
+    if following == None:
+      following = 0
 
     item = YnabItem()
     item["category"] = category

@@ -16,7 +16,7 @@ NEWSPIDER_MODULE = 'ynab.spiders'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'ynab (+http://www.yourdomain.com)'
+USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:77.0) Gecko/20100101 Firefox/77.0'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
@@ -65,7 +65,7 @@ DOWNLOAD_DELAY = 1
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    'ynab.pipelines.WriteItemPipeline': 100,
+    'ynab.pipelines.WriteItemPipeline': 200
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)

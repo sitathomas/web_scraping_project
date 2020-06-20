@@ -1,4 +1,3 @@
-from scrapy.exceptions import DropItem
 from scrapy.exporters import CsvItemExporter
 
 class WriteItemPipeline(object):
