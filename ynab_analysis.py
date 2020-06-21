@@ -16,28 +16,41 @@ plt.style.use('ggplot')
 pd.set_option('display.max_columns', None)
 
 ynab = pd.read_csv("ynab/ynab.csv")
-
-print(ynab.columns.tolist())
-
+print()
+print("Columns:\n", ynab.columns.tolist())
+print()
 print("Number of posts:", len(ynab))
 print("Number of unique users:", len(set(ynab.user)))
+user_group = pd.DataFrame(ynab.groupby("user").size()).sort_values(0, ascending=False)
+user_group["user"] = user_group.index
+user_group.index = range(1, len(user_group)+1)
+user_group.columns = ["posts", "user"]
+user_group["percent"] = round(user_group["posts"] / 7142 * 100, 2)
+user_group = user_group[["user", "posts", "percent"]]
+print("Top 10 Users:\n", user_group[:10])
+print()
 by_date = ynab.sort_values('posted', ascending=False)
 print("Newest post date:", by_date.posted.iloc[0])
 print("Oldest post date:", by_date.posted.iloc[-1])
+print()
 def top_stats(field):
-  sort_top = ynab.sort_values(field, ascending=False)
-  print("Most {}:".format(field), sort_top[field].iloc[0])
+  top_post = ynab.sort_values(field, ascending=False)
+  print("Most {}:".format(field), top_post[field].iloc[0], "\nTitle: {}".format(top_post.title.iloc[0]))
 top_stats("likes")
 top_stats("replies")
 top_stats("views")
 top_stats("following")
+print()
 def avg_stats(field):
-  sort_avg = ynab.sort_values(field, ascending=False)
-  print("Average {}:".format(field), round(sort_avg[field].mean(), 2))
+  print("Average {}:".format(field), round(ynab.sort_values(field, ascending=False)[field].mean(), 2))
 avg_stats("likes")
 avg_stats("replies")
 avg_stats("views")
 avg_stats("following")
+
+
+
+
 
 
 # def category_stats(field):
@@ -52,6 +65,8 @@ avg_stats("following")
 # # for key, values in cat_group:
 # #   print(sum(values.likes))
 # print("\nNumber of posts per category:\n", ynab.groupby("category").category.count())
+
+
 
 ### NLP PRE-PROCESSING ###
 # ynab.text = ynab.text.str.lower()
