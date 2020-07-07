@@ -62,7 +62,7 @@ class YnabSpider(Spider):
 
     views = response.xpath('//div[@class="panel panel-stats"]/ul/li[@class="-divider"]/span[contains(text(),"Views")]/preceding-sibling::span/text()').extract_first()
     
-    following = response.xpath('//div[@class="panel panel-stats"]/ul/li[@id="followingItem"]/span[1]/text()').extract_first()\
+    following = response.xpath('//li[@id="followingItem"]/span[1]/text()').extract_first()
     if following == None:
       following = 0
 
